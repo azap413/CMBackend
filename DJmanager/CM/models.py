@@ -4,7 +4,7 @@ from django.db import models
 
 
 class User(models.Model):
-    username = models.CharField(max_length=50, primary_key=True)
+    username = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     gender = (
@@ -33,8 +33,8 @@ class Sponsor(models.Model):
 
 
 class Driver(models.Model):
-    username = models.OneToOneField(
-        User, on_delete=models.CASCADE)
+    id = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
     plateNum = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     make = models.CharField(max_length=50)
@@ -50,6 +50,6 @@ class Ride(models.Model):
     passengercount = models.IntegerField()
     totalFare = models.DecimalField(max_digits=5, decimal_places=1)
     dropoff = models.CharField(max_length=50)
-    date = models.DateTimeField()
+    date = models.DateField()
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     passengers = models.ManyToManyField(User)
