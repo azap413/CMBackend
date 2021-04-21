@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-ROOT_URLCONF = 'DJmanager.urls'
+ROOT_URLCONF = 'DJmanager.DJmanager.urls'
 
 TEMPLATES = [
     {
