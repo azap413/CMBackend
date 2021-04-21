@@ -1,1 +1,1 @@
-web:gunicorn DJmanager.wsgi --log-file
+web: gunicorn DJmanager.wsgi --log-file
