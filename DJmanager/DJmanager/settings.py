@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-9%iq@=b%c62@ai5_1=7i@0=e_+6%lb587ub%gp^_w8t$r&xtt0
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = ['carmatebackend.herokuapp.com', '127.0.0.1']
 
 
@@ -130,8 +130,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 django_heroku.settings(locals())
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
