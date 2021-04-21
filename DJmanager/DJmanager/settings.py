@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9%iq@=b%c62@ai5_1=7i@0=e_+6%lb587ub%gp^_w8t$r&xtt0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['carmatebackend.herokuapp.com']
+ALLOWED_HOSTS = ['carmatebackend.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'DJmanager.CM'
+    'CM'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-ROOT_URLCONF = 'DJmanager.DJmanager.urls'
+ROOT_URLCONF = 'DJmanager.urls'
 
 TEMPLATES = [
     {
