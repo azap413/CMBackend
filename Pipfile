@@ -11,6 +11,7 @@ djongo = "*"
 dnspython = "*"
 gunicorn = "*"
 whitenoise = "*"
+psycopg2 = "*"
 
 [dev-packages]
 autopep8 = "*"
