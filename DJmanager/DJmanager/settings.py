@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-9%iq@=b%c62@ai5_1=7i@0=e_+6%lb587ub%gp^_w8t$r&xtt0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['carmatebackend.herokuapp.com']
 
 
 # Application definition
