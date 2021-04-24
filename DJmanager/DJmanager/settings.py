@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-9%iq@=b%c62@ai5_1=7i@0=e_+6%lb587ub%gp^_w8t$r&xtt0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 CSRF_COOKIE_SECURE = True
-ALLOWED_HOSTS = ['carmatebackend.herokuapp.com', '127.0.0.1']
-
+ALLOWED_HOSTS = ['*']
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 
@@ -134,3 +134,4 @@ django_heroku.settings(locals())
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SECURE_SSL_REDIRECT = True
