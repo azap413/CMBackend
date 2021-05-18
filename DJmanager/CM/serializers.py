@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from CM.models import Location, Driver, User, Ride, Sponsor
-
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = '__all__'
+from CM.models import Driver, User, Ride, Sponsor
 
 
 class DriverSerializer(serializers.ModelSerializer):

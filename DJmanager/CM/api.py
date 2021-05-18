@@ -1,6 +1,9 @@
-from CM.models import Driver, User, Sponsor, Ride, Location
+from CM.models import Driver, User, Sponsor, Ride
 from rest_framework import viewsets, permissions
-from .serializers import DriverSerializer, UserSerializer, SponsorSerializer, RideSerializer, LocationSerializer
+from .serializers import DriverSerializer, UserSerializer, SponsorSerializer, RideSerializer
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 
 
 class DriverViewSet(viewsets.ModelViewSet):
@@ -19,20 +22,22 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class LocationViewSet(viewsets.ModelViewSet):
-    queryset = Location.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = LocationSerializer
-
-
 class RideViewSet(viewsets.ModelViewSet):
     queryset = Ride.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = RideSerializer
+
+    def create(self, request, *args, **kwargs):
+        ridestatus = request.data.get('status')
+        if ridestatus == 'pending':
+            dest = request.data.get('destination')
+            drivers = DriverSerializer(
+                Driver.objects.filter(destination=dest), many=True)
+            super().create(request, *args, **kwargs)
+            return Response(drivers.data)
+        return Response({"Status": "Error"}, 200)
 
 
 class SponsorViewSet(viewsets.ModelViewSet):

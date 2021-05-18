@@ -21,15 +21,10 @@ class User(models.Model):
     overdue = models.DecimalField(max_digits=5, decimal_places=1)
 
 
-class Location(models.Model):
-    name = models.CharField(max_length=50)
-    xcoordinate = models.DecimalField(max_digits=5, decimal_places=3)
-    ycoordinate = models.DecimalField(max_digits=5, decimal_places=3)
-
-
 class Sponsor(models.Model):
     name = models.CharField(max_length=50)
-    locationId = models.ForeignKey(Location, on_delete=models.CASCADE)
+    latitude = models.DecimalField(max_digits=10, decimal_places=6)
+    longitude = models.DecimalField(max_digits=10, decimal_places=6)
 
 
 class Driver(models.Model):
@@ -40,16 +35,21 @@ class Driver(models.Model):
     make = models.CharField(max_length=50)
     color = models.CharField(max_length=50)
     seats = models.IntegerField()
+    currentlocation = models.CharField(max_length=45, null=True)
+    destination = models.CharField(max_length=45, null=True)
+    lata = models.DecimalField(max_digits=10, decimal_places=6, null=True)
+    longa = models.DecimalField(max_digits=10, decimal_places=6, null=True)
+    latb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
+    longb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
 
 
 class Ride(models.Model):
-    locationId = models.ForeignKey(Location, on_delete=models.CASCADE)
-    startTime = models.TimeField()
-    endTime = models.TimeField()
-    pickup = models.CharField(max_length=50)
-    passengercount = models.IntegerField()
-    totalFare = models.DecimalField(max_digits=5, decimal_places=1)
-    dropoff = models.CharField(max_length=50)
-    date = models.DateField()
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    passengers = models.ManyToManyField(User)
+    rider = models.CharField(max_length=30)
+    currentlocation = models.CharField(max_length=45)
+    destination = models.CharField(max_length=45)
+    lata = models.DecimalField(max_digits=10, decimal_places=6)
+    longa = models.DecimalField(max_digits=10, decimal_places=6)
+    latb = models.DecimalField(max_digits=10, decimal_places=6)
+    longb = models.DecimalField(max_digits=10, decimal_places=6)
+    driver = models.CharField(max_length=30, null=True)
+    status = models.CharField(max_length=30)

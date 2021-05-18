@@ -12,6 +12,7 @@ dnspython = "*"
 gunicorn = "*"
 whitenoise = "*"
 psycopg2 = "*"
+awsebcli = "*"
 
 [dev-packages]
 autopep8 = "*"
