@@ -4,6 +4,7 @@ from .serializers import DriverSerializer, UserSerializer, SponsorSerializer, Ri
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+import socket
 
 
 class DriverViewSet(viewsets.ModelViewSet):
@@ -21,6 +22,23 @@ class UserViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = UserSerializer
 
+    def perform_update(self, serializer):
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ipobj = x_forwarded_for.split(',')[0]
+        else:
+            ipobj = self.request.META.get('REMOTE_ADDR')
+        try:
+            socket.inet_aton(ipobj)
+            ip_valid = True
+        except socket.error:
+            ip_valid = False
+
+        if serializer.is_valid() and ip_valid:
+            serializer.save(ipaddr=ipobj)
+        else:
+            return Response({"Valid": "Not valid"})
+
 
 class RideViewSet(viewsets.ModelViewSet):
     queryset = Ride.objects.all()
@@ -28,6 +46,7 @@ class RideViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = RideSerializer
+    users = User.objects.all()
 
     def create(self, request, *args, **kwargs):
         ridestatus = request.data.get('status')
@@ -43,12 +62,17 @@ class RideViewSet(viewsets.ModelViewSet):
                 return Response({"status": "No drivers Found"}, 200)
         return Response({"Status": "Error"}, 200)
 
-    def update(self, request, *args, **kwargs):
-        ridestatus = request.data.get('status')
-        if ridestatus == 'passengerconfirmed':
-            super.update(request, *args, **kwargs)
-            return Response({"status": "confirming driver"})
-        return Response({"status": "passenger not confirmed"})
+    def perform_update(self, serializer):
+        ridestatus = self.request.data.get('status')
+        if ridestatus == 'passenger confirmed':
+            driverid = self.request.data.get('driver')
+            # send notification here
+            serializer.save(driver=driverid)
+        elif ridestatus == 'driver confirmed':
+            namepass = self.request.data.get('rider')
+            passenger = User.objects.filter(name=namepass)
+            # send notification here
+            serializer.save()
 
 
 class SponsorViewSet(viewsets.ModelViewSet):

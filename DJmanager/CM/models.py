@@ -1,12 +1,11 @@
 from django.db import models
-
 # Create your models here.
 
 
 class User(models.Model):
     username = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     gender = (
         ("Male", "Male"),
         ("Female", "Female")
@@ -19,6 +18,7 @@ class User(models.Model):
     email = models.EmailField(max_length=50)
     total_balance = models.DecimalField(max_digits=5, decimal_places=1)
     overdue = models.DecimalField(max_digits=5, decimal_places=1)
+    ipaddr = models.CharField(max_length=100, default=0)
 
 
 class Sponsor(models.Model):
@@ -41,6 +41,7 @@ class Driver(models.Model):
     longa = models.DecimalField(max_digits=10, decimal_places=6, null=True)
     latb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
     longb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
+    ipaddr = models.CharField(max_length=100, default=0)
 
 
 class Ride(models.Model):
