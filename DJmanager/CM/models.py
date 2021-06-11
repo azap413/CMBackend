@@ -1,24 +1,45 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 # Create your models here.
 
 
-class User(models.Model):
-    username = models.CharField(max_length=50)
+class CustomAccountManager(BaseUserManager):
+    def create_superuser(self, name, email, password, phoneNumber, **otherfields):
+        otherfields.setdefault('is_staff', True)
+        otherfields.setdefault('is_superuser', True)
+        otherfields.setdefault('is_active', True)
+        return self.create_user(name, email, password, phoneNumber, **otherfields)
+
+    def create_user(self, name, email, password, phoneNumber, **otherfields):
+        email = self.normalize_email(email)
+        user = self.model(email=email, name=name,
+                          phoneNumber=phoneNumber, **otherfields)
+        user.set_password(password)
+        user.save()
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    username = None
     password = models.CharField(max_length=50)
-    name = models.CharField(max_length=50, unique=True)
-    gender = (
-        ("Male", "Male"),
-        ("Female", "Female")
-    )
+    name = models.CharField(max_length=50)
     phoneNumber = models.CharField(max_length=50)
-    age = models.IntegerField()
-    rating = models.DecimalField(max_digits=2, decimal_places=1)
-    address = models.CharField(max_length=100)
-    cnic = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    total_balance = models.DecimalField(max_digits=5, decimal_places=1)
-    overdue = models.DecimalField(max_digits=5, decimal_places=1)
-    ipaddr = models.CharField(max_length=100, default=0)
+    age = models.IntegerField(blank=True)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, blank=True)
+    email = models.EmailField(max_length=50, unique=True)
+    total_balance = models.DecimalField(
+        max_digits=5, decimal_places=1, blank=True)
+    overdue = models.DecimalField(max_digits=5, decimal_places=1, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['phoneNumber', 'name']
+
+    objects = CustomAccountManager()
+
+    def __str__(self):
+        return self.email
 
 
 class Sponsor(models.Model):
@@ -41,7 +62,6 @@ class Driver(models.Model):
     longa = models.DecimalField(max_digits=10, decimal_places=6, null=True)
     latb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
     longb = models.DecimalField(max_digits=10, decimal_places=6, null=True)
-    ipaddr = models.CharField(max_length=100, default=0)
 
 
 class Ride(models.Model):

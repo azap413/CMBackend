@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 import socket
+from rest_framework.permissions import IsAuthenticated
 
 
 class DriverViewSet(viewsets.ModelViewSet):
@@ -42,9 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class RideViewSet(viewsets.ModelViewSet):
     queryset = Ride.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = (IsAuthenticated,)
     serializer_class = RideSerializer
     users = User.objects.all()
 
