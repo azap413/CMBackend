@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 import socket
 from rest_framework.permissions import IsAuthenticated
+import requests
 
 
 class DriverViewSet(viewsets.ModelViewSet):
@@ -43,20 +44,26 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class RideViewSet(viewsets.ModelViewSet):
     queryset = Ride.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [
+        permissions.AllowAny
+    ]
     serializer_class = RideSerializer
     users = User.objects.all()
 
     def create(self, request, *args, **kwargs):
         ridestatus = request.data.get('status')
         if ridestatus == 'pending':
-            dest = request.data.get('destination')
-            drivers = DriverSerializer(
-                Driver.objects.filter(destination=dest), many=True)
-            drivercount = Driver.objects.filter(destination=dest).count()
-            if drivercount > 0:
-                super().create(request, *args, **kwargs)
-                return Response(drivers.data)
+            riderlat = request.data.get('lata')
+            riderlong = request.data.get('longa')
+            drivers = Driver.objects.all()
+            newlist = []
+            for x in drivers:
+                if(calculateDistance(riderlat, riderlong, x.lata, x.longa) < 10.0):
+                    newlist.append(x)
+            if newlist:
+                serializer = DriverSerializer(newlist, many=True)
+                super().create(request,*args,**kwargs)
+                return Response(serializer.data)
             else:
                 return Response({"status": "No drivers Found"}, 200)
         return Response({"Status": "Error"}, 200)
@@ -80,3 +87,11 @@ class SponsorViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = SponsorSerializer
+
+def calculateDistance(riderlat, riderlong, driverlat, driverlong):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&"
+    results = requests.get(url + "origins=" + str(riderlat) + "," + str(riderlong) + "&destinations=" +
+                           str(driverlat)+"," + str(driverlong)+"&key=AIzaSyDDFA2PBwoG4cltc_zclqc9NQGHzFmkRI8").json()
+    distance = float(results['rows'][0]['elements'][0]
+                     ['distance']['text'].split()[0])
+    return distance

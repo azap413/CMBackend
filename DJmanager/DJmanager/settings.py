@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9%iq@=b%c62@ai5_1=7i@0=e_+6%lb587ub%gp^_w8t$r&xtt0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -64,6 +67,9 @@ REST_FRAMEWORK = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'CM.serializers.RegisterSerializer'
 }
+
+
+
 ROOT_URLCONF = 'DJmanager.urls'
 
 TEMPLATES = [
@@ -90,16 +96,14 @@ WSGI_APPLICATION = 'DJmanager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'CLIENT': {
-            "name": "ProjectDB",
-            "host": "mongodb+srv://Ali:believer413@carmatecluster.vlh1k.mongodb.net/ProjectDB?retryWrites=true&w=majority",
-            "username": "Ali",
-            "password": "believer413",
-            "authMechanism": "SCRAM-SHA-1"
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'AliZahid$CMDB',
+        'USER': 'AliZahid',
+        'PASSWORD': 'carmatebackend',
+        'HOST': 'AliZahid.mysql.pythonanywhere-services.com',
         },
-    }
 }
+
 
 
 # Password validation
